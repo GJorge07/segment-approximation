@@ -1,6 +1,11 @@
 #ifndef PONTO_H
 #define PONTO_H
 
+Ponto *pontos;
+int n;
+int area_tipo;
+float tolerancia;
+
 typedef struct {
 
     float x, y;

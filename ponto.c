@@ -1,10 +1,6 @@
 #include "ponto.h"
 #include <math.h>
 
-Ponto *pontos;
-int n;
-int area_tipo;
-float tolerancia;
 
 float area_triangulo(float x1, float y1,float x2, float y2,float x3, float y3) {
 
