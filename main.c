@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "ponto.h"
 
+
 int main {
 
 
