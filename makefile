@@ -13,5 +13,8 @@ ponto.o: ponto.c ponto.h
 heap.o: heap.c heap.h
 	$(CC) $(CFLAGS) -c heap.c
 
+guloso.o: guloso.c guloso.h ponto.h heap.h
+	$(CC) $(CFLAGS) -c guloso.c
+
 clean:
 	rm -f *.o programa

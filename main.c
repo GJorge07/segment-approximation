@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "ponto.h"
+#include "guloso.h"
 
 
 int main(int argc, char *argv[]){
