@@ -7,11 +7,11 @@ typedef struct{
 } No;
 
 typedef struct{
-    No *heap;
+    No *v;
     int tam;
-} Fila_Prio;
+} Heap;
 
-void cria_heap();
+Heap cria_heap(int n);
 void insere_heap(int indice_ponto);
 int  extrai_min_heap();
 void atualiza_heap(int indice_ponto);

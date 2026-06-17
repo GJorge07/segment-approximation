@@ -1,12 +1,22 @@
+#include <stdlib.h>
+
 #include "heap.h"
 #include "ponto.h"
 
+Heap *cria_heap(int n) {
+    Heap *heap;
 
+    if(!(heap = malloc(sizeof(Heap))))
+        return NULL;
 
+    if(!(heap->v = malloc(sizeof(No) * n))){
+        free(heap);
+        heap = NULL;
 
-void cria_heap() {
+        return NULL;
+    }
 
-
+    return heap;
 }
 
 void insere_heap(int indice_ponto) {
