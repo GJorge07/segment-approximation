@@ -1,27 +1,33 @@
 #include <stdlib.h>
+#include <float.h>
 
 #include "heap.h"
 #include "ponto.h"
 
+void troca(Heap *heap, int i, int j){
+    No aux = heap->v[i];
+    heap->v[i] = heap->v[j];
+    heap->v[j] = aux;
+
+    heap->posicao[heap->v[i].indice] = i;
+    heap->posicao[heap->v[j].indice] = j;
+}
+
 void sacode_heap(Heap *heap, int i){
-    No aux;
-    i *= 2;
+    while(i*2 <= heap->tam){
+        int filho = i*2;
+        if(filho < heap->tam && heap->v[filho].erro > heap->v[filho+1].erro)
+            filho++;
 
-    while(i <= heap->tam){
-        if(i < heap->tam && heap->v[i].erro > heap->v[i+1].erro)
-            i++;
-
-        if(heap->v[i/2].erro <= heap->v[i].erro) /*e heap*/
+        if(heap->v[i].erro <= heap->v[filho].erro) /*eh heap*/
             break;
 
-        aux = heap->v[i/2];
-        heap->v[i/2] = heap->v[i];
-        heap->v[i] = aux;
-        i *= 2;
+        troca(heap, i, filho);
+        i = filho;
     }
 }
 
-Heap *cria_heap(int n) {
+Heap *cria_heap(int n){
     Heap *heap;
 
     if(!(heap = malloc(sizeof(Heap))))
@@ -34,13 +40,36 @@ Heap *cria_heap(int n) {
         return NULL;
     }
 
+    if(!(heap->posicao = malloc(sizeof(int) * (n+1)))){
+        free(heap->v);
+        heap->v = NULL;
+
+        free(heap);
+        heap = NULL;
+
+        return NULL;
+    }
+
+    heap->v[0].erro = -FLT_MAX;
+
+    int i;
+    for(i=0;i <= n;i++)
+        heap->posicao[i] = -1;
+
     heap->tam = 0;
+    heap->capacidade = n;
 
     return heap;
 }
 
-void insere_heap(Heap *heap, int indice_ponto) {
-    No novo, aux;
+int insere_heap(Heap *heap, int indice_ponto){
+    No novo;
+
+    if(!heap)
+        return 1;
+
+    if(heap->tam == heap->capacidade)
+        return 1;
 
     novo.indice = indice_ponto;
     novo.erro = pontos[indice_ponto].erro;
@@ -49,19 +78,27 @@ void insere_heap(Heap *heap, int indice_ponto) {
     heap->v[heap->tam] = novo; /*insere no final do heap*/
 
     int i = heap->tam;
+    heap->posicao[indice_ponto] = i;
+
     while(heap->v[i].erro < heap->v[i/2].erro){
-        aux = heap->v[i/2];
-        heap->v[i/2] = heap->v[i];
-        heap->v[i] = aux;
+        troca(heap, i, i/2);
         i /= 2;
     }
+
+    return 0;
 }
 
-int extrai_min_heap(Heap *heap) {
-    int removido = heap->v[1].indice;
+int extrai_min_heap(Heap *heap){
+    if(!heap)
+        return -1;
 
-    if(heap->tam != 0)
+    int removido = heap->v[1].indice;
+    heap->posicao[removido] = -1;
+
+    if(heap->tam > 1){
         heap->v[1] = heap->v[heap->tam];
+        heap->posicao[heap->v[1].indice] = 1;
+    }
 
     heap->tam--;
 
@@ -70,13 +107,39 @@ int extrai_min_heap(Heap *heap) {
     return removido;
 }
 
-void atualiza_heap(int indice_ponto) {
+int atualiza_heap(Heap *heap, int indice_ponto){
+    if(!heap)
+        return 1;
 
+    int i = heap->posicao[indice_ponto];
+    if(i == -1)
+        return 1;
+
+    float erro_ant = heap->v[i].erro;
+
+    heap->v[i].erro = pontos[indice_ponto].erro;
+
+    if(heap->v[i].erro > erro_ant)
+        sacode_heap(heap, i);
+    else if(heap->v[i].erro < erro_ant){
+        while(heap->v[i].erro < heap->v[i/2].erro){
+            troca(heap, i, i/2);
+            i /= 2;
+        }
+    }
+
+    return 0;
 }
 
-Heap *destroi_heap(Heap *heap) {
+Heap *destroi_heap(Heap *heap){
+    if(!heap)
+        return NULL;
+
     free(heap->v);
     heap->v = NULL;
+
+    free(heap->posicao);
+    heap->posicao = NULL;
 
     free(heap);
     heap = NULL;

@@ -10,15 +10,16 @@ typedef struct{
     No *v;
     int *posicao; /*tabela de simbolos*/
     int tam;
+    int capacidade;
 } Heap;
 
 Heap *cria_heap(int n);
 
-void insere_heap(Heap *heap, int indice_ponto);
+int insere_heap(Heap *heap, int indice_ponto);
 
 int extrai_min_heap(Heap *heap);
 
-void atualiza_heap(int indice_ponto);
+int atualiza_heap(Heap *heap, int indice_ponto);
 
 Heap *destroi_heap(Heap *heap);
 
