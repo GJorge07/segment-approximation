@@ -8,6 +8,7 @@ typedef struct{
 
 typedef struct{
     No *v;
+    int *posicao; /*tabela de simbolos*/
     int tam;
 } Heap;
 
@@ -19,6 +20,6 @@ int extrai_min_heap(Heap *heap);
 
 void atualiza_heap(int indice_ponto);
 
-Heap *destroi_heap();
+Heap *destroi_heap(Heap *heap);
 
 #endif
