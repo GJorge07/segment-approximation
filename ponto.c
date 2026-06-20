@@ -1,6 +1,4 @@
 #include "ponto.h"
-#include <math.h>
-
 
 float area_triangulo(float x1, float y1,float x2, float y2,float x3, float y3) {
 
@@ -28,7 +26,7 @@ float calcula_erro(int i) {     /*calcula erro pra ser usado depois pra saber se
 
     int prox = pontos[i].proximo;
 
-    if (area_tipo == 0)
+    if (area_tipo == 1)
         return area_triangulo(pontos[ant].x,pontos[ant].y,pontos[i].x,pontos[i].y,pontos[prox].x,pontos[prox].y);
     else
         return altura2_triangulo(pontos[ant].x,pontos[ant].y,pontos[i].x,pontos[i].y,pontos[prox].x,pontos[prox].y);

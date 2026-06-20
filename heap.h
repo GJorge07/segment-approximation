@@ -1,6 +1,8 @@
 #ifndef HEAP_H
 #define HEAP_H
 
+#include "ponto.h"
+
 typedef struct{
     int indice;
     float erro; /*prioridade*/

@@ -2,7 +2,6 @@
 #include <float.h>
 
 #include "heap.h"
-#include "ponto.h"
 
 void troca(Heap *heap, int i, int j){
     No aux = heap->v[i];
@@ -90,6 +89,9 @@ int insere_heap(Heap *heap, int indice_ponto){
 
 int extrai_min_heap(Heap *heap){
     if(!heap)
+        return -1;
+
+    if (heap->tam == 0)
         return -1;
 
     int removido = heap->v[1].indice;

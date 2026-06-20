@@ -1,6 +1,9 @@
 #ifndef GULOSO_H
 #define GULOSO_H
 
-void loop_guloso();
+#include "heap.h"
+#include "ponto.h"
+
+void loop_guloso(Heap *h);
 
 #endif

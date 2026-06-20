@@ -1,16 +1,18 @@
 CC = gcc
 CFLAGS = -Wall -g
 
-programa: main.o ponto.o heap.o
-	$(CC) $(CFLAGS) -o programa main.o ponto.o heap.o -lm
+OBJS = main.o ponto.o heap.o guloso.o
 
-main.o: main.c ponto.h heap.h
+programa: $(OBJS)
+	$(CC) $(CFLAGS) -o programa $(OBJS) -lm
+
+main.o: main.c ponto.h heap.h guloso.h
 	$(CC) $(CFLAGS) -c main.c
 
 ponto.o: ponto.c ponto.h
 	$(CC) $(CFLAGS) -c ponto.c
 
-heap.o: heap.c heap.h
+heap.o: heap.c heap.h ponto.h
 	$(CC) $(CFLAGS) -c heap.c
 
 guloso.o: guloso.c guloso.h ponto.h heap.h
