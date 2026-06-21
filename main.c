@@ -13,12 +13,12 @@ float tolerancia;
 int main(int argc, char *argv[]){
     Heap *h;
 
-    /* talvez tenha que usar isso aqui!! não sei
-    if (argc < 3) {                 / evita acessar argv[1]/argv[2] fora dos limites /
+    //Evita segfault se não tiver parâmetros
+    if (argc < 3){
         fprintf(stderr, "uso: %s -a|-h <tolerancia>\n", argv[0]);
         return 1;
     }
-    */
+    
 
     char *tipo = argv[1];           /*le -a ou -h*/
 
@@ -37,9 +37,16 @@ int main(int argc, char *argv[]){
 
     tolerancia = atof(argv[2]);   /*le a tolerancia*/
 
-    if (scanf("%d", &n) != 1 || n < 0) {   /*valida leitura de n*/
+    //Garante entrada válida
+    if (scanf("%d", &n) != 1) {   /*valida leitura de n*/
         fprintf(stderr, "Erro: leitura invalida da quantidade de pontos\n");
         return 1;
+    }
+
+    //Evita alocação vazia
+    if (n <= 0){
+        printf("0\n");
+        return 0;
     }
 
     pontos = malloc(n * sizeof(Ponto));         /*alocação dos pontos*/
@@ -56,23 +63,33 @@ int main(int argc, char *argv[]){
         pontos[i].x = (float)i + 1;            /*x vao de 1.0 a n*/
         pontos[i].removido = 0;
         
+        //Segurança na inicialização dos ponteiros
         if (i > 0)                      /*define anteriores*/
             pontos[i].anterior = i - 1;
+        else 
+            pontos[i].anterior = -1;
 
         if (i < n -1)                   /*define proximos*/
             pontos[i].proximo = i + 1;
+        else
+            pontos[i].proximo = -1;
         
     }
 
-    for (int j = 1; j < n-1; j++)           /*calcula erro*/
-        pontos[j].erro = calcula_erro(j);
+    //Se só existem extremos, não há o que remover
+    if (n > 2) { 
+        for (int j = 1; j < n-1; j++)           /*calcula erro*/
+            pontos[j].erro = calcula_erro(j);
 
-    /* Cria e insere pontos no heap */
-    h = cria_heap(n);
-    for (int j = 1; j < n - 1; j++)
-        insere_heap(h, j);
+        /* Cria e insere pontos no heap */
+        h = cria_heap(n);
+        for (int j = 1; j < n - 1; j++)
+            insere_heap(h, j);
 
-    loop_guloso(h);
+        loop_guloso(h);
+
+        destroi_heap(h);
+    }
 
     /*------------------------IMPRESSAO DA SAÍDA---------------------------------*/
     int cont = 0;
@@ -86,7 +103,6 @@ int main(int argc, char *argv[]){
         if (!pontos[w].removido)
             printf("%.1f %g\n", pontos[w].x, pontos[w].y);  /*%g trata not cientifica*/
 
-    destroi_heap(h);
     free(pontos);
     return 0;
 }
